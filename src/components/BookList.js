@@ -1,4 +1,8 @@
+import { Box, Button, HStack, Heading, Icon, IconButton, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
+import { MdOutlineOndemandVideo } from "react-icons/md";
+import { BsFillMoonStarsFill } from "react-icons/bs";
+import { HiSun } from "react-icons/hi";
 
 const BookList = () => {
     // useState는 화면 랜더링에 반영됨
@@ -8,6 +12,11 @@ const BookList = () => {
 
     // useRef는 화면 랜더링 반영되지 않는 참조값
     const pageCount = useRef(1);                  // 1page
+
+    // Chakra UI 에서 제공하는 훅
+    const { colorMode, toggleColorMode } = useColorMode();
+    const color = useColorModeValue('cyan.400', 'cyan.200');
+    const buttonColor = useColorModeValue('purple 200', 'purple 200');
 
     const fetchBooks = async() => {
         const response = await fetch(
@@ -24,8 +33,7 @@ const BookList = () => {
 
         pageCount.current = data.meta.pageable_count % 10 > 0 ? data.meta.pageable_count / 10 + 1 : data.meta.pageable_count / 10;
         pageCount.current = Math.floor(pageCount.current);
-        
-        pageCount.current = pageCount.current > 15 ? 15 : pageCount.current;
+        pageCount.current = pageCount.current > 15 ? 15 : pageCount.current;        // pageCount가 15가 넘어가면 15 아니면 냅둠 (최대 요청가능 페이지가 15라서)
         console.log(pageCount.current);
 
         setBookList(data.documents);
@@ -43,22 +51,51 @@ const BookList = () => {
 
     return (
         <>
-            <h1>동영상 검색 목록</h1>
-            <input type='text' onChange={changeSearch} placeholder="검색어를 입력하세요." />
-            <div>
-                {bookList.map((book) => (
-                    <>
-                        <p>{book.title}</p>
-                    </>
-                ))}
-            </div>
-            <ul>
+            <Box>
+                <Heading color={color}>
+                    <Icon as={MdOutlineOndemandVideo} boxSize={"1.5em"} />동영상 검색 목록
+                </Heading>
+
+                {
+                    colorMode === "light" ?
+                    <IconButton icon={<BsFillMoonStarsFill />} onClick={toggleColorMode} size={"lg"}/> :
+                    <IconButton icon={<HiSun />} onClick={toggleColorMode} size={"lg"}/>
+                }
+
+                <Input type="text" placeholder="검색어 입력" onChange={changeSearch} size="lg" variant="filled" />
+                <TableContainer>
+                    <Table variant={"striped"} colorScheme={"teal"}>
+                        <Thead>
+                            <Tr>
+                                <Th>No</Th>
+                                <Th>Title</Th>
+                                <Th>Author</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {bookList.map((book, index) => (
+                                <>
+                                    <Tr>
+                                        <Td>{(page - 1) * 10 + index + 1}</Td>
+                                        <Td>
+                                            <a href={book.url}>{book.title}</a>
+                                        </Td>
+                                        <Td>{book.author}</Td>
+                                    </Tr>
+                                </>
+                            ))}
+                        </Tbody>
+                        <Tfoot></Tfoot>
+                    </Table>
+                </TableContainer>
+                <HStack>
                 {Array.from({length: pageCount.current}, (_, index) => (
                     <>
-                        <li onClick={e => { setPage(index + 1) }}>{index + 1}</li>
+                        <Button onClick={e => { setPage(index + 1) }} colorScheme={page === index + 1 ? "red" : buttonColor}>{index + 1}</Button>
                     </>
                 ))}   
-            </ul>
+                </HStack>
+            </Box>
         </>
     );
 };

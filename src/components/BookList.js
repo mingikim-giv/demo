@@ -1,8 +1,8 @@
 import { Box, Button, HStack, Heading, Icon, IconButton, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { MdOutlineOndemandVideo } from "react-icons/md";
-import { BsFillMoonStarsFill } from "react-icons/bs";
-import { HiSun } from "react-icons/hi";
+import { PiSunDimThin, PiSunFill, PiSunThin, PiVideoFill } from 'react-icons/pi';
+import { RiMoonClearFill} from 'react-icons/ri';
 
 const BookList = () => {
     // useState는 화면 랜더링에 반영됨
@@ -15,8 +15,8 @@ const BookList = () => {
 
     // Chakra UI 에서 제공하는 훅
     const { colorMode, toggleColorMode } = useColorMode();
-    const color = useColorModeValue('cyan.400', 'cyan.200');
-    const buttonColor = useColorModeValue('purple 200', 'purple 200');
+    const color = useColorModeValue('cyan.200', 'cyan.100');
+    const buttonScheme = useColorModeValue('yellow', 'yellow');
 
     const fetchBooks = async() => {
         const response = await fetch(
@@ -53,18 +53,27 @@ const BookList = () => {
         <>
             <Box>
                 <Heading color={color}>
-                    <Icon as={MdOutlineOndemandVideo} boxSize={"1.5em"} />동영상 검색 목록
+                    <Icon as={PiVideoFill} boxSize={"1.5em"} />동영상 검색 목록
                 </Heading>
 
                 {
                     colorMode === "light" ?
-                    <IconButton icon={<BsFillMoonStarsFill />} onClick={toggleColorMode} size={"lg"}/> :
-                    <IconButton icon={<HiSun />} onClick={toggleColorMode} size={"lg"}/>
+                    <IconButton icon={<RiMoonClearFill />} onClick={toggleColorMode} /> :
+                    <IconButton icon={<PiSunFill />} onClick={toggleColorMode} />
                 }
 
-                <Input type="text" placeholder="검색어 입력" onChange={changeSearch} size="lg" variant="filled" />
+                <h1>동영상 검색 목록</h1>
+                <Input 
+                    type="text" 
+                    placeholder="검색어 입력" 
+                    onChange={changeSearch} 
+                    size="lg" 
+                    variant="filled" 
+                />
+                <input type="text" placeholder="검색어 입력" 
+                onChange={changeSearch} />
                 <TableContainer>
-                    <Table variant={"striped"} colorScheme={"teal"}>
+                    <Table variant={"striped"} colorScheme='yellow'>
                         <Thead>
                             <Tr>
                                 <Th>No</Th>
@@ -89,11 +98,21 @@ const BookList = () => {
                     </Table>
                 </TableContainer>
                 <HStack>
-                {Array.from({length: pageCount.current}, (_, index) => (
-                    <>
-                        <Button onClick={e => { setPage(index + 1) }} colorScheme={page === index + 1 ? "red" : buttonColor}>{index + 1}</Button>
-                    </>
-                ))}   
+                    {Array.from({length: pageCount.current}, (_, index) => (
+                        <>
+                            <Button 
+                                colorScheme={
+                                    page === index + 1 ? 
+                                    "pink" : buttonScheme
+                                }
+                                onClick={e => { 
+                                    setPage(index + 1); 
+                                }}
+                            >
+                                {index + 1}
+                            </Button>
+                        </>
+                    ))}   
                 </HStack>
             </Box>
         </>

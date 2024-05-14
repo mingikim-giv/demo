@@ -1,7 +1,9 @@
-import { Box, Button, HStack, Heading, Icon, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, Divider, HStack, Heading, Icon, Input, Stack, Table, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { PiVideoFill } from 'react-icons/pi';
 import { Image } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import { Link } from 'react-router-dom';
 
 const VideoList = () => {
     // useState는 화면 랜더링에 반영됨
@@ -61,33 +63,37 @@ const VideoList = () => {
                     size="lg" 
                     variant="filled" 
                 />
+                
+                <HStack wrap={"wrap"} gap={"30px"} m={"50px 0px"}>
+                    {VideoList.map((video, index) => (
+                        <Link to={video.url} key={video.url}>
+                        <Card boxSize={"300px"}>
+                            <CardBody>
+                            <Image
+                                w={"280px"}
+                                src={video.thumbnail}
+                                alt={video.title}
+                                borderRadius="lg"
+                            />
+                            <Stack mt="6" spacing="3">
+                                <Text
+                                fontWeight={"bold"}
+                                textOverflow={"ellipsis"}
+                                overflow={"hidden"}
+                                lineHeight={"1em"}
+                                height={"2em"}
+                                >
+                                {video.title}
+                                </Text>
+                                <Divider />
+                                <Text>{video.author}</Text>
+                            </Stack>
+                            </CardBody>
+                        </Card>
+                        </Link>
+                    ))}
+                </HStack>
 
-                <TableContainer>
-                    <Table variant={"striped"} colorScheme='yellow'>
-                        <Thead>
-                            <Tr>
-                                <Th>No</Th>
-                                <Th>Title</Th>
-                                <Th>Author</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {VideoList.map((video, index) => (
-                                <>
-                                    <Tr>
-                                        <Td>{(page - 1) * 10 + index + 1}</Td>
-                                        <Td>
-                                            <Image src={video.thumbnail} />
-                                            <a href={video.url}>{video.title}</a>
-                                        </Td>
-                                        <Td>{video.author}</Td>
-                                    </Tr>
-                                </>
-                            ))}
-                        </Tbody>
-                        <Tfoot></Tfoot>
-                    </Table>
-                </TableContainer>
                 <HStack>
                     {Array.from({length: pageCount.current}, (_, index) => (
                         <>

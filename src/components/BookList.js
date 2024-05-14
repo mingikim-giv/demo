@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Heading, Icon, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, HStack, Heading, Icon, Image, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { MdOutlineMenuBook } from "react-icons/md";
 
@@ -69,6 +69,7 @@ const BookList = () => {
                                 <Th>Title</Th>
                                 <Th>Price</Th>
                                 <Th>Authors</Th>
+                                <Th>Publisher</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -77,10 +78,12 @@ const BookList = () => {
                                     <Tr>
                                         <Td>{(page - 1) * 10 + index + 1}</Td>
                                         <Td>
+                                            <Image src={book.thumbnail}/>
                                             <a href={book.url}>{book.title}</a>
                                         </Td>
                                         <Td>{book.price}원</Td>
                                         <Td>{book.authors}</Td>
+                                        <Td>{book.publisher}</Td>
                                     </Tr>
                                 </>
                             ))}
